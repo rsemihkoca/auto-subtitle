@@ -1,59 +1,98 @@
-expo ile bir proje yapmak istiyorum
+# AutoSub - Video Subtitle Generator
 
-fal ai'nın sağladığı
+An Expo React Native app that automatically generates professional subtitles for videos using AI.
 
+## Features
 
-010ebb40-95b1-486e-9a39-b9dce7834868:da7177f48eb7e2c9be6f45c593a516d3
-uygulama metric toplama
+- 📹 Upload videos from device or paste video URLs
+- 🤖 AI-powered automatic subtitle generation
+- 🎨 Professional subtitle styling with karaoke-style highlighting
+- 💳 Credit-based system
+- 🌙 Dark theme UI
 
+## Getting Started
 
+### Prerequisites
 
-✅ Auth
+- Node.js (v18 or later)
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- iOS Simulator (for iOS) or Android Emulator (for Android)
 
-Firebase Auth, Auth0, AWS Cognito
-→ Giriş (email, sms, sosyal), güvenli oturum yönetimi
+### Installation
 
-✅ Database / Backend
+1. Install dependencies:
+```bash
+npm install
+```
 
-Firestore, Supabase, MongoDB Atlas, AWS Lambda
-→ Hızlı backend, veri saklama, serverless fonksiyon
+2. Set up your FAL API configuration:
+   - Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   - Add your FAL API key or proxy URL:
+   ```
+   # Option 1: Direct API key (not recommended for production)
+   EXPO_PUBLIC_FAL_KEY=your_fal_api_key_here
+   
+   # Option 2: Proxy URL (recommended - keeps API key secure)
+   EXPO_PUBLIC_PROXY_URL=https://your-proxy-url.com
+   ```
+   
+   **Note:** For production, use a proxy server to keep your API key secure. See the `fal-ai-express-proxy` project for an example.
 
-✅ Storage
+3. Start the development server:
+```bash
+npm start
+```
 
-Firebase Storage, AWS S3, Cloudflare R2
-→ Dosya/resim/video depolama + CDN
+4. Run on your preferred platform:
+   - Press `i` for iOS simulator
+   - Press `a` for Android emulator
+   - Scan QR code with Expo Go app on your device
 
-✅ Push Notification
+## Project Structure
 
-FCM, OneSignal, Expo Notifications
-→ Bildirim gönderimi
+```
+src/
+  ├── components/        # Reusable UI components
+  │   ├── ui/            # Basic UI components (Button, Text)
+  │   ├── Header.tsx     # App header with logo and credits
+  │   └── UploadSection.tsx  # Video upload component
+  ├── screens/           # Screen components
+  │   └── VideoUploadScreen.tsx  # Main upload screen
+  └── services/          # API services
+      └── videoService.ts  # Video processing service
+```
 
-✅ Analytics
+## API Integration
 
-Firebase Analytics, Mixpanel, Amplitude, GA
-→ Kullanıcı davranışı & ürün kararları
+The app uses the fal.ai auto-subtitle API. Make sure you have:
+1. A valid FAL API key
+2. Sufficient credits in your account
+3. Network access to fal.ai endpoints
 
-✅ Crash / Monitoring
+## Building for Production
 
-Sentry, Crashlytics, Datadog
-→ Hata izleme, performans takibi
+### iOS
+```bash
+eas build --platform ios
+```
 
-✅ Feature Flag / A/B
+### Android
+```bash
+eas build --platform android
+```
 
-LaunchDarkly, Firebase RC, Amplitude Experiment
-→ Sürüm atmadan özellik aç/kapat, deney
+## Environment Variables
 
-✅ Payments
+- `EXPO_PUBLIC_FAL_KEY`: Your FAL API key (required if not using proxy)
+- `EXPO_PUBLIC_PROXY_URL`: Your proxy server URL (recommended for production)
 
-Stripe, Braintree, IAP(adapty)
-→ Güvenli ödeme & abonelik
+**Security Note:** Never commit your `.env` file to version control. The `.env.example` file is provided as a template.
 
-✅ CI/CD & Deployment
+## License
 
-GitHub Actions, Bitrise, Vercel, Expo EAS
-→ Build, test, deploy otomasyonu
+MIT
 
-✅ Email / SMS
-
-SendGrid, Mailgun, Twilio
-→ Doğrulama, bildirim e-postası/SMS

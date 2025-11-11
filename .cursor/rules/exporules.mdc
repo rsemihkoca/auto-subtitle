@@ -1,0 +1,497 @@
+---
+alwaysApply: true
+---
+# Expo TypeScript Mobile App Development Guidelines
+
+## General Rules
+
+- Always use Expo Router for navigation (DO NOT import or use React Navigation directly)
+- Use minimum Expo SDK 54.0.0
+- Prefer Expo SDK packages over bare React Native packages
+- Use TypeScript with strict mode enabled
+
+## Project Configuration
+
+1. Follow these rules for TypeScript configuration:
+   - Always enable `strict` mode
+   - Use path aliases (e.g., @components, @screens) - avoid long relative imports
+   - Extend Expo's `tsconfig.base.json` configuration
+   - Configure your `tsconfig.json` as follows:
+
+```json
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@screens/*": ["src/screens/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/utils/*"],
+      "@services/*": ["src/services/*"]
+    }
+  },
+  "experiments": {
+    "typedRoutes": true
+  }
+}
+```
+
+2. Enable typed routes in your `app.json`:
+```json
+{
+  "expo": {
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    }
+  }
+}
+```
+
+3. Project structure should be:
+```
+app/                 # Main directory for Expo Router routes
+  ├── _layout.tsx    # Root layout (Stack, Tabs, etc.)
+  ├── index.tsx      # Home screen
+  ├── (tabs)/        # Tab navigation group
+  │   ├── _layout.tsx # Tab navigator configuration
+  │   ├── index.tsx  # First tab screen
+  │   └── settings.tsx # Settings tab screen
+  ├── [id]/          # Dynamic routes (e.g., user profiles)
+  │   └── index.tsx  # Dynamic route screen
+src/
+  ├── components/    # Reusable UI components
+  │   ├── ui/        # Basic UI components (Button, Text, etc.)
+  │   └── [feature]/ # Feature-specific components
+  ├── hooks/         # Custom hooks
+  ├── services/      # API requests and external services
+  ├── utils/         # Helper functions
+  ├── constants/     # Constants and configuration
+  ├── contexts/      # React contexts
+  └── types/         # TypeScript types and interfaces
+```
+
+4. Use Expo EAS for performance, avoid using the development builder
+
+## TypeScript Rules
+
+1. Prefer interfaces over types
+2. Use mapping objects instead of enums
+3. For type safety:
+   - Always define interfaces for API responses
+   - Use type definitions for props and state
+   - Avoid "any" type, prefer "unknown"
+   - Use optional chaining (?.) for nullable variables
+
+4. For each React component:
+```typescript
+interface ComponentProps {
+  // props here...
+}
+
+export const Component: React.FC<ComponentProps> = ({ 
+  // props here...
+}) => {
+  // component logic...
+};
+```
+
+5. React 19+ Context API:
+   - Use the `use` hook instead of `useContext` for better type safety
+   - The `use` hook is available in React 19 and provides better error handling
+
+## Performance Optimization
+
+1. Avoid unnecessary renders:
+   - Memoize with useMemo and useCallback
+   - Use FlatList and VirtualizedList for large lists
+   - Use key props for list items
+   - Create smooth animations with react-native-reanimated
+   
+2. State management:
+   - Context API is sufficient for small applications
+   - Use Zustand or Redux Toolkit for more complex applications
+   - Use React Query for asynchronous operations
+   
+3. Image optimization:
+   - Use expo-image (instead of Image)
+   - Prefer WebP format
+   - Specify image dimensions beforehand
+   
+4. Prevent unnecessary re-renders:
+   - Use memo()
+   - Wrap functions with useCallback
+   - Cache calculations with useMemo
+
+## Code Style and Structure
+
+1. Functional and declarative programming:
+   - Avoid class components, use functional components
+   - Isolate side effects within useEffect
+   
+2. File organization:
+   - One file per component
+   - Naming: PascalCase for components, camelCase for functions/variables
+   - Group related files in a folder with barrel exports (index.ts)
+   
+3. Consistent styling approach:
+   - Use React Context for theming
+   - Use styled-components or StyleSheet API, avoid inline styles
+   - Use useWindowDimensions and flexbox for responsive design
+   
+4. For code quality:
+   - Use ESLint and Prettier
+   - Perform regular refactoring
+   - Create small, focused components
+
+## API Requests
+
+1. Use Axios or React Query for API requests
+2. Define types for each API response:
+```typescript
+interface ApiResponse {
+  data: YourDataType;
+  status: number;
+  // other fields...
+}
+```
+3. Handle error management and show loading states
+4. Isolate API requests in the service layer
+
+## Navigation with Expo Router
+
+1. Use Expo Router for file-based navigation (DO NOT use React Navigation directly)
+2. Define typed parameters for routes:
+```typescript
+// In a dynamic route file like app/user/[id].tsx
+import { Text } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+
+// Type your route parameters
+interface UserParams {
+  id: string;
+  tab?: string;
+}
+
+export default function UserProfile() {
+  // Access route parameters with automatic type checking
+  const params = useLocalSearchParams<UserParams>();
+  
+  return <Text>User ID: {params.id}</Text>;
+}
+```
+
+3. Create navigation layouts with `_layout.tsx` files:
+```typescript
+// app/_layout.tsx (Root layout with Stack navigation)
+import { Stack } from 'expo-router';
+
+export default function RootLayout() {
+  return (
+    <Stack>
+      <Stack.Screen name="index" options={{ title: 'Home' }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="[id]" options={{ title: 'Profile' }} />
+    </Stack>
+  );
+}
+```
+
+4. Navigate between screens:
+```typescript
+import { Link, useRouter } from 'expo-router';
+
+// Declarative navigation with Link
+<Link href="/settings">Go to Settings</Link>
+
+// For dynamic routes with params
+<Link 
+  href={{
+    pathname: "/user/[id]",
+    params: { id: "123", tab: "posts" }
+  }}
+>
+  View Profile
+</Link>
+
+// Imperative navigation with useRouter (prefer router.navigate over router.push)
+const router = useRouter();
+router.navigate('/settings');
+
+// With params
+router.navigate({
+  pathname: '/user/[id]',
+  params: { id: '123', tab: 'posts' }
+});
+```
+
+5. Protected Routes (SDK 53+):
+```typescript
+// Use Stack.Protected or Tabs.Protected to guard routes
+import { Stack } from 'expo-router';
+import { useAuthState } from '@/utils/authState';
+
+export default function RootLayout() {
+  const { isLoggedIn } = useAuthState();
+
+  return (
+    <Stack>
+      <Stack.Protected guard={isLoggedIn}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="modal" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!isLoggedIn}>
+        <Stack.Screen name="sign-in" />
+        <Stack.Screen name="create-account" />
+      </Stack.Protected>
+    </Stack>
+  );
+}
+```
+
+6. Group related routes:
+   - Use parentheses in folder names to create logical groups (e.g., `(tabs)`, `(auth)`)
+   - Use square brackets for dynamic segments (e.g., `[id]`)
+   - Use underscore prefix for layout and special files (e.g., `_layout.tsx`)
+
+7. Add deep linking support in your `app.json`:
+```json
+{
+  "expo": {
+    "scheme": "your-app-scheme",
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
+```
+
+8. SplashScreen (SDK 53+):
+```typescript
+// Import SplashScreen from expo-router, not expo-splash-screen
+import { SplashScreen } from 'expo-router';
+
+SplashScreen.preventAutoHideAsync();
+
+export function SplashScreenController() {
+  const { isLoading } = useSession();
+
+  if (!isLoading) {
+    SplashScreen.hide();
+  }
+
+  return null;
+}
+```
+
+## Security and Error Handling
+
+1. Store sensitive information in expo-secure-store
+2. Add a global error boundary
+3. Add retry logic for network errors
+4. Use try-catch blocks and log errors
+
+## Localization and Accessibility
+
+1. Add multi-language support with i18next
+2. Add accessibility features (accessibilityLabel, etc.)
+3. Add RTL (right-to-left) language support
+
+## Package Management
+
+1. Regularly remove unused dependencies
+2. Prefer Expo SDK packages over bare React Native packages
+3. Use smaller alternatives if available for large packages
+4. Use minimum SDK 54.0.0
+ 
+## Building and Publishing
+
+1. Automate build processes with Expo EAS
+2. Use Expo Updates for OTA updates
+3. Add live error tracking with Sentry
+
+## Component Templates
+
+### Basic Component
+```typescript
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Text } from '@components/ui/Text';
+
+interface CardProps {
+  title: string;
+  description?: string;
+  onPress?: () => void;
+}
+
+export const Card: React.FC<CardProps> = ({ 
+  title, 
+  description,
+  onPress
+}) => {
+  return (
+    <View style={styles.container} onTouchEnd={onPress}>
+      <Text style={styles.title}>{title}</Text>
+      {description && <Text style={styles.description}>{description}</Text>}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 14,
+    color: '#666666',
+  },
+});
+```
+
+### Custom Hook Example
+```typescript
+import { useState, useEffect } from 'react';
+
+interface UseFetchResult<T> {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => void;
+}
+
+export const useFetch = <T>(url: string): UseFetchResult<T> => {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [refetchIndex, setRefetchIndex] = useState<number>(0);
+
+  const refetch = () => setRefetchIndex(prev => prev + 1);
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const json = await response.json();
+        if (isMounted) {
+          setData(json);
+          setError(null);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+          setData(null);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [url, refetchIndex]);
+
+  return { data, loading, error, refetch };
+};
+```
+
+### Context Provider Example
+```typescript
+import React, { createContext, useState, ReactNode, use } from 'react';
+
+interface ThemeContextProps {
+  isDarkMode: boolean;
+  toggleTheme: () => void;
+  colors: {
+    background: string;
+    text: string;
+    primary: string;
+    secondary: string;
+  };
+}
+
+const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
+
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  const toggleTheme = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
+  const colors = {
+    background: isDarkMode ? '#121212' : '#FFFFFF',
+    text: isDarkMode ? '#FFFFFF' : '#121212',
+    primary: '#3498db',
+    secondary: '#2ecc71',
+  };
+
+  const value = {
+    isDarkMode,
+    toggleTheme,
+    colors,
+  };
+
+  return (
+    <ThemeContext.Provider value={value}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// For React 19+, use the 'use' hook instead of useContext
+export const useTheme = (): ThemeContextProps => {
+  const context = use(ThemeContext);
+  
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  
+  return context;
+};
+```
+
+## Practical Tips for Efficient Development
+
+1. Use Expo's development client instead of Expo Go for better performance
+2. Implement hot reloading with React Refresh
+3. Use Flipper for debugging
+4. Create shared component libraries for consistent UI
+5. Break down complex screens into smaller, manageable components
+6. Use TypeScript's discriminated unions for complex state management
+7. Optimize startup time by lazy loading non-critical components
+8. Implement proper keyboard handling for form inputs
+9. Use proper loading skeletons instead of simple loading spinners
+10. Implement proper error boundaries for each major section of your app
+
+By following these guidelines, your Expo TypeScript mobile application development process will be significantly streamlined and your app will be more performant, maintainable, and robust.
