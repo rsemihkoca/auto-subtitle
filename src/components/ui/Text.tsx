@@ -1,16 +1,20 @@
-import React from 'react';
-import { Text as RNText, TextProps as RNTextProps, StyleSheet } from 'react-native';
+import React from "react";
+import {
+  Text as RNText,
+  TextProps as RNTextProps,
+  StyleSheet,
+} from "react-native";
 
 interface TextProps extends RNTextProps {
-  variant?: 'title' | 'subtitle' | 'body' | 'caption';
+  variant?: "title" | "subtitle" | "body" | "caption";
   bold?: boolean;
 }
 
-export const Text: React.FC<TextProps> = ({ 
-  variant = 'body', 
+export const Text: React.FC<TextProps> = ({
+  variant = "body",
   bold = false,
   style,
-  ...props 
+  ...props
 }) => {
   const variantStyles = {
     title: styles.title,
@@ -21,11 +25,7 @@ export const Text: React.FC<TextProps> = ({
 
   return (
     <RNText
-      style={[
-        variantStyles[variant],
-        bold && styles.bold,
-        style,
-      ]}
+      style={[variantStyles[variant], bold && styles.bold, style]}
       {...props}
     />
   );
@@ -34,24 +34,23 @@ export const Text: React.FC<TextProps> = ({
 const styles = StyleSheet.create({
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   body: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   caption: {
     fontSize: 14,
-    color: '#CCCCCC',
+    color: "#CCCCCC",
   },
   bold: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
-

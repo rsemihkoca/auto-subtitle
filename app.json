@@ -3,12 +3,11 @@
     "name": "AutoSub",
     "slug": "auto-subtitle",
     "version": "1.0.0",
+    "scheme": "autosub",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
       "backgroundColor": "#1a1a1a"
     },
     "assetBundlePatterns": [
@@ -32,7 +31,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you upload videos."
+          "photosPermission": "The app accesses your photos to let you upload videos.",
+          "cameraPermission": "The app accesses your camera to let you take videos."
         }
       ]
     ],

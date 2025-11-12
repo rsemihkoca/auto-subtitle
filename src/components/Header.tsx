@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import { Text } from './ui/Text';
-import { LinearGradient } from 'expo-linear-gradient';
+import React from "react";
+import { View, StyleSheet, Image } from "react-native";
+import { Text } from "./ui/Text";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface HeaderProps {
   credits?: number;
@@ -12,13 +12,12 @@ export const Header: React.FC<HeaderProps> = ({ credits = 250, avatarUri }) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <LinearGradient
-          colors={['#3B82F6', '#3B82F6']}
-          style={styles.logoIcon}
-        >
+        <LinearGradient colors={["#3B82F6", "#3B82F6"]} style={styles.logoIcon}>
           <Text style={styles.logoText}>cc</Text>
         </LinearGradient>
-        <Text style={styles.logoTitle} bold>AutoSub</Text>
+        <Text style={styles.logoTitle} bold>
+          AutoSub
+        </Text>
       </View>
 
       <View style={styles.rightContainer}>
@@ -45,60 +44,61 @@ export const Header: React.FC<HeaderProps> = ({ credits = 250, avatarUri }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#2a2a2a",
   },
   logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   logoIcon: {
     width: 40,
     height: 40,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   logoText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   logoTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
   rightContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   creditsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2a2a2a',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#2a2a2a",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
     gap: 8,
   },
   coinStack: {
-    position: 'relative',
+    position: "relative",
     width: 24,
     height: 16,
   },
   coin: {
-    position: 'absolute',
+    position: "absolute",
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#10B981',
+    backgroundColor: "#10B981",
   },
   coin1: {
     left: 0,
@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
   },
   creditsText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: "600",
+    color: "#FFFFFF",
   },
   avatar: {
     width: 40,
@@ -128,14 +128,13 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#9333EA',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#9333EA",
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatarText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
-

@@ -1,49 +1,70 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Header } from '@components/Header';
-import { UploadSection } from '@components/UploadSection';
-import { Text } from '@components/ui/Text';
-import { uploadVideo, processVideoUrl, ProcessVideoResponse } from '@services/videoService';
-import { VideoResultScreen } from './VideoResultScreen';
+import React, { useState } from "react";
+import { View, StyleSheet, ScrollView, Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Header } from "@components/Header";
+import { UploadSection } from "@components/UploadSection";
+import { Text } from "@components/ui/Text";
+import { AnimatedScreen } from "@components/AnimatedScreen";
+import {
+  uploadVideo,
+  processVideoUrl,
+  ProcessVideoResponse,
+} from "@services/videoService";
+import { VideoResultScreen } from "./VideoResultScreen";
+import { VideoPlayerScreen } from "./VideoPlayerScreen";
 
 export const VideoUploadScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ProcessVideoResponse | null>(null);
+  const [selectedVideoUri, setSelectedVideoUri] = useState<string | null>(null);
+  const [selectedVideoType, setSelectedVideoType] = useState<"file" | "url">(
+    "file"
+  );
 
-  const handleFileSelected = async (uri: string) => {
-    setLoading(true);
-    try {
-      // First upload the file, then process it
-      const videoUrl = await uploadVideo(uri);
-      const processedResult = await processVideoUrl(videoUrl);
-      setResult(processedResult);
-    } catch (error) {
-      console.error('Error processing file:', error);
-      Alert.alert(
-        'Error',
-        error instanceof Error ? error.message : 'Failed to process video'
-      );
-    } finally {
-      setLoading(false);
-    }
+  const handleFileSelected = (uri: string) => {
+    // Set selected video URI and show player screen
+    setSelectedVideoUri(uri);
+    setSelectedVideoType("file");
   };
 
-  const handleUrlSubmit = async (url: string) => {
+  const handleUrlSubmit = (url: string) => {
     if (!url.trim()) {
-      Alert.alert('Error', 'Please enter a valid video URL');
+      Alert.alert("Error", "Please enter a valid video URL");
       return;
     }
 
+    // Set selected video URI and show player screen
+    setSelectedVideoUri(url);
+    setSelectedVideoType("url");
+  };
+
+  const handleBackFromPlayer = () => {
+    setSelectedVideoUri(null);
+  };
+
+  const handleProcessVideo = async () => {
+    if (!selectedVideoUri) return;
+
     setLoading(true);
     try {
-      const processedResult = await processVideoUrl(url);
+      let videoUrl: string;
+
+      if (selectedVideoType === "file") {
+        // Upload the file first, then process it
+        videoUrl = await uploadVideo(selectedVideoUri);
+      } else {
+        // Use the URL directly
+        videoUrl = selectedVideoUri;
+      }
+
+      const processedResult = await processVideoUrl(videoUrl);
       setResult(processedResult);
+      setSelectedVideoUri(null); // Clear selected video when processing starts
     } catch (error) {
-      console.error('Error processing URL:', error);
+      console.error("Error processing video:", error);
       Alert.alert(
-        'Error',
-        error instanceof Error ? error.message : 'Failed to process video'
+        "Error",
+        error instanceof Error ? error.message : "Failed to process video"
       );
     } finally {
       setLoading(false);
@@ -55,43 +76,58 @@ export const VideoUploadScreen: React.FC = () => {
   };
 
   if (result) {
-    return <VideoResultScreen result={result} onBack={handleBack} />;
+    return (
+      <AnimatedScreen type="fade" direction="forward">
+        <VideoResultScreen result={result} onBack={handleBack} />
+      </AnimatedScreen>
+    );
+  }
+
+  if (selectedVideoUri) {
+    return (
+      <AnimatedScreen type="slide" direction="forward">
+        <VideoPlayerScreen
+          videoUri={selectedVideoUri}
+          onBack={handleBackFromPlayer}
+          onProcess={handleProcessVideo}
+          loading={loading}
+        />
+      </AnimatedScreen>
+    );
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <Header credits={250} />
+    <AnimatedScreen type="fade" direction="backward">
+      <SafeAreaView style={styles.container} edges={["top"]}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <Header credits={250} />
 
-        <View style={styles.content}>
-          <Text variant="title" style={styles.title}>
-            Add Subtitles to Your Videos
-          </Text>
+          <View style={styles.content}>
+            <Text variant="title" style={styles.title}>
+              Add Your Video
+            </Text>
 
-          <Text variant="body" style={styles.description}>
-            Upload your video and let AI generate professional subtitles instantly
-          </Text>
-
-          <View style={styles.uploadSectionContainer}>
-            <UploadSection
-              onFileSelected={handleFileSelected}
-              onUrlSubmit={handleUrlSubmit}
-              loading={loading}
-            />
+            <View style={styles.uploadSectionContainer}>
+              <UploadSection
+                onFileSelected={handleFileSelected}
+                onUrlSubmit={handleUrlSubmit}
+                loading={loading}
+              />
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </AnimatedScreen>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: "#1a1a1a",
   },
   scrollContent: {
     flexGrow: 1,
@@ -103,21 +139,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#FFFFFF",
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   description: {
     fontSize: 16,
-    color: '#CCCCCC',
+    color: "#CCCCCC",
     marginBottom: 40,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 24,
   },
   uploadSectionContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "flex-start",
   },
 });
-

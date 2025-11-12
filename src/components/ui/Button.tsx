@@ -1,14 +1,14 @@
-import React from 'react';
-import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Text } from './Text';
+import React from "react";
+import { TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Text } from "./Text";
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
   loading?: boolean;
   disabled?: boolean;
-  variant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -16,11 +16,11 @@ export const Button: React.FC<ButtonProps> = ({
   onPress,
   loading = false,
   disabled = false,
-  variant = 'primary',
+  variant = "primary",
 }) => {
   const isDisabled = disabled || loading;
 
-  if (variant === 'primary') {
+  if (variant === "primary") {
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -29,7 +29,7 @@ export const Button: React.FC<ButtonProps> = ({
         style={[styles.button, isDisabled && styles.buttonDisabled]}
       >
         <LinearGradient
-          colors={['#9333EA', '#14B8A6']}
+          colors={["#9333EA", "#14B8A6"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.gradient}
@@ -49,7 +49,11 @@ export const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       disabled={isDisabled}
       activeOpacity={0.8}
-      style={[styles.button, styles.buttonSecondary, isDisabled && styles.buttonDisabled]}
+      style={[
+        styles.button,
+        styles.buttonSecondary,
+        isDisabled && styles.buttonDisabled,
+      ]}
     >
       {loading ? (
         <ActivityIndicator color="#FFFFFF" />
@@ -63,29 +67,28 @@ export const Button: React.FC<ButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
     minHeight: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonSecondary: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: "#2a2a2a",
   },
   buttonDisabled: {
     opacity: 0.5,
   },
   gradient: {
-    width: '100%',
+    width: "100%",
     minHeight: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 24,
     paddingVertical: 12,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
-

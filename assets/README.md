@@ -22,6 +22,7 @@ You need to add the following assets to this directory:
 ## Generating Assets
 
 You can use tools like:
+
 - [Expo Asset Generator](https://www.npmjs.com/package/@expo/asset-generator)
 - [App Icon Generator](https://www.appicon.co/)
 - Or create them manually using design tools
@@ -29,4 +30,3 @@ You can use tools like:
 ## Temporary Solution
 
 For development, Expo will use default placeholders if these files are missing. However, you should add proper assets before building for production.
-

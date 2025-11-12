@@ -22,27 +22,32 @@ An Expo React Native app that automatically generates professional subtitles for
 ### Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Set up your FAL API configuration:
    - Copy `.env.example` to `.env`:
+
    ```bash
    cp .env.example .env
    ```
+
    - Add your FAL API key or proxy URL:
+
    ```
    # Option 1: Direct API key (not recommended for production)
    EXPO_PUBLIC_FAL_KEY=your_fal_api_key_here
-   
+
    # Option 2: Proxy URL (recommended - keeps API key secure)
    EXPO_PUBLIC_PROXY_URL=https://your-proxy-url.com
    ```
-   
+
    **Note:** For production, use a proxy server to keep your API key secure. See the `fal-ai-express-proxy` project for an example.
 
 3. Start the development server:
+
 ```bash
 npm start
 ```
@@ -69,6 +74,7 @@ src/
 ## API Integration
 
 The app uses the fal.ai auto-subtitle API. Make sure you have:
+
 1. A valid FAL API key
 2. Sufficient credits in your account
 3. Network access to fal.ai endpoints
@@ -76,11 +82,13 @@ The app uses the fal.ai auto-subtitle API. Make sure you have:
 ## Building for Production
 
 ### iOS
+
 ```bash
 eas build --platform ios
 ```
 
 ### Android
+
 ```bash
 eas build --platform android
 ```
@@ -95,4 +103,3 @@ eas build --platform android
 ## License
 
 MIT
-

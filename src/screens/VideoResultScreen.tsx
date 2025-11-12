@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, Linking } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Header } from '@components/Header';
-import { Text } from '@components/ui/Text';
-import { Button } from '@components/ui/Button';
-import { ProcessVideoResponse } from '@services/videoService';
+import React from "react";
+import { View, StyleSheet, ScrollView, Linking } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Header } from "@components/Header";
+import { Text } from "@components/ui/Text";
+import { Button } from "@components/ui/Button";
+import { ProcessVideoResponse } from "@services/videoService";
 
 interface VideoResultScreenProps {
   result: ProcessVideoResponse;
@@ -19,12 +19,12 @@ export const VideoResultScreen: React.FC<VideoResultScreenProps> = ({
     try {
       await Linking.openURL(result.video.url);
     } catch (error) {
-      console.error('Error opening video URL:', error);
+      console.error("Error opening video URL:", error);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -88,7 +88,7 @@ export const VideoResultScreen: React.FC<VideoResultScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: "#1a1a1a",
   },
   scrollContent: {
     flexGrow: 1,
@@ -100,53 +100,52 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#FFFFFF",
     marginBottom: 32,
-    textAlign: 'center',
+    textAlign: "center",
   },
   infoContainer: {
-    backgroundColor: '#1f1f1f',
+    backgroundColor: "#1f1f1f",
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
   },
   infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 12,
   },
   infoLabel: {
     fontSize: 16,
-    color: '#CCCCCC',
+    color: "#CCCCCC",
   },
   infoValue: {
     fontSize: 16,
-    color: '#FFFFFF',
-    fontWeight: '600',
+    color: "#FFFFFF",
+    fontWeight: "600",
   },
   transcriptionContainer: {
-    backgroundColor: '#1f1f1f',
+    backgroundColor: "#1f1f1f",
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
   },
   transcriptionTitle: {
     fontSize: 18,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     marginBottom: 12,
   },
   transcriptionText: {
     fontSize: 14,
-    color: '#CCCCCC',
+    color: "#CCCCCC",
     lineHeight: 22,
   },
   buttonContainer: {
-    marginTop: 'auto',
+    marginTop: "auto",
     paddingBottom: 32,
   },
   buttonSpacer: {
     height: 12,
   },
 });
-

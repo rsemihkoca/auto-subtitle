@@ -2,27 +2,22 @@
 
 > Add automatic subtitles to videos
 
-
 ## Overview
 
 - **Endpoint**: `https://fal.run/fal-ai/workflow-utilities/auto-subtitle`
 - **Model ID**: `fal-ai/workflow-utilities/auto-subtitle`
 - **Category**: video-to-video
 - **Kind**: inference
-**Tags**: auto-subtitle, captioning
-
-
+  **Tags**: auto-subtitle, captioning
 
 ## API Information
 
 This model can be used via our HTTP API or more conveniently via our client libraries.
 See the input and output schema below, as well as the usage examples.
 
-
 ### Input Schema
 
 The API accepts the following input parameters:
-
 
 - **`video_url`** (`string`, _required_):
   URL of the video file to add automatic subtitles to
@@ -98,8 +93,6 @@ The API accepts the following input parameters:
   Enable animation effects for subtitles (bounce style entrance) Default value: `true`
   - Default: `true`
 
-
-
 **Required Parameters Example**:
 
 ```json
@@ -129,7 +122,6 @@ The API accepts the following input parameters:
 }
 ```
 
-
 ### Output Schema
 
 The API returns the following output format:
@@ -144,8 +136,6 @@ The API returns the following output format:
 - **`subtitle_count`** (`integer`, _required_):
   Number of subtitle segments generated
 
-
-
 **Example Response**:
 
 ```json
@@ -159,7 +149,6 @@ The API returns the following output format:
   "transcription": ""
 }
 ```
-
 
 ## Usage Examples
 
@@ -219,7 +208,8 @@ import { fal } from "@fal-ai/client";
 
 const result = await fal.subscribe("fal-ai/workflow-utilities/auto-subtitle", {
   input: {
-    video_url: "https://v3b.fal.media/files/b/kangaroo/oUCiZjQwEy6bIQdPUSLDF_output.mp4"
+    video_url:
+      "https://v3b.fal.media/files/b/kangaroo/oUCiZjQwEy6bIQdPUSLDF_output.mp4",
   },
   logs: true,
   onQueueUpdate: (update) => {
@@ -231,7 +221,6 @@ const result = await fal.subscribe("fal-ai/workflow-utilities/auto-subtitle", {
 console.log(result.data);
 console.log(result.requestId);
 ```
-
 
 ## Additional Resources
 

@@ -1,4 +1,3 @@
-
 -----
 
 
@@ -287,4 +286,6 @@ const url = await fal.storage.upload(file);
 | `end` | `float` | **\*required** | End time in seconds (must be greater than start time). |
 | `text` | `string` | **\*required** | Subtitle text to display (supports multiple lines with `<br>`). |
 
------
+---
+
+--
